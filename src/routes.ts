@@ -6,5 +6,6 @@ const router = Router();
 const filmeController = new FilmeController();
 
 router.post('/filmes', filmeController.create);
+router.get('/filmes', filmeController.list);
 
 export { router };
