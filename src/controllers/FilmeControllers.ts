@@ -25,4 +25,16 @@ export class FilmeController {
             return res.status(500).json({ error: "Erro interno do servidor" });
         }
     }
+
+    async delete(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const filmeModel = new FilmeModel();
+            await filmeModel.delete(Number(id));
+            return res.status(204).send();
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+    }
 }

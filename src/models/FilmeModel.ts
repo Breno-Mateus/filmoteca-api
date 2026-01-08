@@ -25,4 +25,10 @@ export class FilmeModel {
         const { rows } = await pool.query(query);
         return rows;
     }
+
+    async delete(id: number): Promise<void> {
+        const query = `DELETE FROM filmes WHERE id = $1`;
+        const values = [id];
+        await pool.query(query, values);
+    }
 }

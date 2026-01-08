@@ -7,5 +7,6 @@ const filmeController = new FilmeController();
 
 router.post('/filmes', filmeController.create);
 router.get('/filmes', filmeController.list);
+router.delete('/filmes/:id', filmeController.delete);
 
 export { router };
