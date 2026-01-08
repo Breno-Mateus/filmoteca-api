@@ -31,4 +31,16 @@ export class FilmeModel {
         const values = [id];
         await pool.query(query, values);
     }
+
+    async update(id: number, titulo: string, diretor: string, nota: number): Promise<Filme> {
+        const query = `
+            UPDATE filmes
+            SET titulo = $1, diretor = $2, nota = $3
+            WHERE id = $4
+            RETURNING *
+        `;
+        const values = [titulo, diretor, nota, id];
+        const { rows } = await pool.query(query, values);
+        return rows[0];
+    }
 }

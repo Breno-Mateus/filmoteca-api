@@ -37,4 +37,17 @@ export class FilmeController {
             return res.status(500).json({ error: "Erro interno do servidor" });
         }
     }
+
+    async update(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { titulo, diretor, nota } = req.body;
+            const filmeModel = new FilmeModel();
+            const filme = await filmeModel.update(Number(id), titulo, diretor, nota);
+            return res.status(200).json(filme);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+        }
+    }
 }
