@@ -32,7 +32,7 @@ export class FilmeModel {
         await pool.query(query, values);
     }
 
-    async update(id: number, titulo: string, diretor: string, nota: number): Promise<Filme> {
+    async update(id: number, titulo: string, diretor: string, nota: number): Promise<Filme | null> {
         const query = `
             UPDATE filmes
             SET titulo = $1, diretor = $2, nota = $3
@@ -41,6 +41,11 @@ export class FilmeModel {
         `;
         const values = [titulo, diretor, nota, id];
         const { rows } = await pool.query(query, values);
+        
+        if (rows.length === 0) {
+            return null;
+        }
+
         return rows[0];
     }
 }

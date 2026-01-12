@@ -1,15 +1,23 @@
 import { Request, Response } from 'express';
 import { FilmeModel } from '../models/FilmeModel';
+import { filmeSchema } from '../schemas/FilmeSchema';
+import { ZodError } from 'zod';
 
 export class FilmeController {
 
     async create(req: Request, res: Response) {
         try {
-            const { titulo, diretor, nota } = req.body;
+            const validatedData = filmeSchema.parse(req.body);
             const filmeModel = new FilmeModel();
-            const filme = await filmeModel.create(titulo, diretor, nota);
+            const filme = await filmeModel.create(validatedData.titulo, validatedData.diretor, validatedData.nota);
             return res.status(201).json(filme);
         } catch (error) {
+            if (error instanceof ZodError) {
+                return res.status(400).json({ 
+                    message: "Erro nos dados fornecidos",
+                    issues: error.issues 
+                });
+            }
             console.log(error);
             return res.status(500).json({ error: "Erro interno do servidor" });
         }
@@ -41,11 +49,20 @@ export class FilmeController {
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { titulo, diretor, nota } = req.body;
+            const validatedData = filmeSchema.parse(req.body);
             const filmeModel = new FilmeModel();
-            const filme = await filmeModel.update(Number(id), titulo, diretor, nota);
+            const filme = await filmeModel.update(Number(id), validatedData.titulo, validatedData.diretor, validatedData.nota);
+            if (!filme) {
+                return res.status(404).json({ error: "Filme não encontrado" });
+            }
             return res.status(200).json(filme);
         } catch (error) {
+            if (error instanceof ZodError) {
+                return res.status(400).json({ 
+                    message: "Erro nos dados fornecidos",
+                    issues: error.issues 
+                });
+            }
             console.log(error);
             return res.status(500).json({ error: "Erro interno do servidor" });
         }
